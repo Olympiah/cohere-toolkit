@@ -5,10 +5,11 @@ from community.tools import (
     Category,
     ClinicalTrials,
     ConnectorRetriever,
-    LlamaIndexUploadPDFRetriever,
+    # LlamaIndexUploadPDFRetriever,
     ManagedTool,
     PubMedRetriever,
     WolframAlpha,
+    CustomRetriever
 )
 
 
@@ -16,9 +17,10 @@ class CommunityToolName(StrEnum):
     Arxiv = ArxivRetriever.NAME
     Connector = ConnectorRetriever.NAME
     Pub_Med = PubMedRetriever.NAME
-    File_Upload_LlamaIndex = LlamaIndexUploadPDFRetriever.NAME
+    # File_Upload_LlamaIndex = LlamaIndexUploadPDFRetriever.NAME
     Wolfram_Alpha = WolframAlpha.NAME
     ClinicalTrials = ClinicalTrials.NAME
+    Custom_Retriever = CustomRetriever.NAME
 
 
 COMMUNITY_TOOLS = {
@@ -63,15 +65,15 @@ COMMUNITY_TOOLS = {
         category=Category.DataLoader,
         description="Retrieves documents from Pub Med.",
     ),
-    CommunityToolName.File_Upload_LlamaIndex: ManagedTool(
-        display_name="File Reader",
-        implementation=LlamaIndexUploadPDFRetriever,
-        is_visible=True,
-        is_available=LlamaIndexUploadPDFRetriever.is_available(),
-        error_message="LlamaIndexUploadPDFRetriever is not available.",
-        category=Category.FileLoader,
-        description="Retrieves documents from a file using LlamaIndex.",
-    ),
+    # CommunityToolName.File_Upload_LlamaIndex: ManagedTool(
+    #     display_name="File Reader",
+    #     implementation=LlamaIndexUploadPDFRetriever,
+    #     is_visible=True,
+    #     is_available=LlamaIndexUploadPDFRetriever.is_available(),
+    #     error_message="LlamaIndexUploadPDFRetriever is not available.",
+    #     category=Category.FileLoader,
+    #     description="Retrieves documents from a file using LlamaIndex.",
+    # ),
     CommunityToolName.Wolfram_Alpha: ManagedTool(
         display_name="Wolfram Alpha",
         implementation=WolframAlpha,
@@ -112,6 +114,23 @@ COMMUNITY_TOOLS = {
             },
         },
     ),
+    CommunityToolName.Custom_Retriever: ManagedTool(                   #Custom Retriever definitions
+    display_name="MongoDB Atlas Retriever",
+    implementation=CustomRetriever,
+    parameter_definitions={
+        "query": {
+            "description": "Query for retrieval.",
+            "type": "str",
+            "required": True,
+        }
+    },
+    is_visible=True,
+    is_available=CustomRetriever.is_available(),
+    error_message="MongoDBRetriever is not available.",
+    category=Category.DataLoader,
+    description="Retrieves documents from MongoDB.",
+),
+
 }
 
 # For main.py cli setup script
